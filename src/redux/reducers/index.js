@@ -1,14 +1,5 @@
-const reducer = (state, action) => {
-    console.log('reducer',state)
-    switch (action.type) {
-        case 'TEST': {
-            return {
-                ...state
-            }
-        }
-        default:
-            return state
-    }
-}
+import { combineReducers } from 'redux'
+import receipt from './receiptType.js'
+import fullAddress from './addressPicker.js'
 
-export default reducer
+export default combineReducers({ receipt, fullAddress })

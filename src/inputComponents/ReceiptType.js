@@ -14,10 +14,13 @@ import '@material/react-typography/dist/typography.css'
 import '@material/react-text-field/dist/text-field.css';
 import '@material/react-radio/dist/radio.css';
 import "@material/react-checkbox/dist/checkbox.css";
+// react-redux
+import { connect } from 'react-redux'
+import { changeReceiptType, addTaxId, removeValue } from '../redux/actions'
 
 
 const ReceiptType = (props) => {
-    const { data, handleRadio, handleCheckbox, handText, removeValue } = props
+    const { receiptType, textId, receiptOptions } = props.receipt
     return (
         <div>
             <Card>
@@ -32,8 +35,8 @@ const ReceiptType = (props) => {
                                     type="radio"
                                     value="0"
                                     name="receiptType"
-                                    onChange={(e) => handleRadio(e)}
-                                    checked={data.receiptType === '0'}
+                                    onChange={props.changeReceiptType}
+                                    checked={receiptType === '0'}
                                 />
                             </Radio>
                             <br />
@@ -43,21 +46,21 @@ const ReceiptType = (props) => {
                                     type="radio"
                                     value="1"
                                     name="receiptType"
-                                    onChange={(e) => handleRadio(e)}
-                                    checked={data.receiptType === '1'}
+                                    onChange={props.changeReceiptType}
+                                    checked={receiptType === '1'}
                                 />
                             </Radio>
                             <TextField
                                 style={{ margin: '1rem 0' }}
                                 outlined
                                 label='統一編號'
-                                onTrailingIconSelect={() => removeValue()}
+                                onTrailingIconSelect={props.removeValue}
                                 trailingIcon={<MaterialIcon role="button" icon="delete" />}
                             >
                                 <Input
-                                    disabled={data.receiptType !== '1'}
-                                    value={data.textId}
-                                    onChange={handText}
+                                    disabled={receiptType !== '1'}
+                                    value={textId}
+                                    onChange={props.addTaxId}
                                 />
                             </TextField>
                         </label>
@@ -69,8 +72,8 @@ const ReceiptType = (props) => {
                                 value="byMail"
                                 name="receiptOptions[]"
                                 attributeName="receiptOptions"
-                                onChange={(e) => handleCheckbox(e)}
-                                checked={data.receiptOptions.includes('byMail')}
+                                onChange={props.handleCheckbox}
+                                checked={receiptOptions.includes('byMail')}
                             />實體寄送
                 <br />
                             <Checkbox
@@ -78,10 +81,10 @@ const ReceiptType = (props) => {
                                 value="finite"
                                 name="receiptOptions[]"
                                 attributeName="receiptOptions"
-                                onChange={(e) => handleCheckbox(e)}
-                                checked={data.receiptOptions.includes('finite')}
+                                onChange={props.handleCheckbox}
+                                checked={receiptOptions.includes('finite')}
                                 disabled={
-                                    !data.receiptOptions.includes("byMail")
+                                    !receiptOptions.includes("byMail")
                                 }
                             />限時掛號
             </label>
@@ -92,4 +95,14 @@ const ReceiptType = (props) => {
     )
 }
 
-export default ReceiptType
+const mapStateToProps = (state) => {
+    return {
+        receipt: state.receipt
+    }
+}
+
+export default connect(mapStateToProps, {
+    changeReceiptType,
+    addTaxId,
+    removeValue,
+})(ReceiptType)
